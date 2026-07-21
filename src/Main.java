@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.Scanner;
+
 import dao.ProdutoDao;
 import modelos.Produto;
 
@@ -9,192 +10,221 @@ public class Main {
 
         ProdutoDao dao = new ProdutoDao();
         Scanner teclado = new Scanner(System.in);
+
         int opcao = 0;
         int opcaoProduto;
-        
+
         do {
-        	System.out.println("\n===== MENU =====");
-        	System.out.println("1 - Produtos");
-        	System.out.println("2 - Clientes");
-        	System.out.println("3 - Pedidos");
-        	System.out.println("0 - Sair");
-        	System.out.print("Escolha uma opção: ");
-        	opcao = teclado.nextInt();
-        	switch (opcao) {
 
-        	case 1:
-        		    System.out.println("\n===== PRODUTOS =====");
-        		    System.out.println("1 - Cadastrar Produto");
-        		    System.out.println("2 - Listar Produtos");
-        		    System.out.println("3 - Consultar Produto");
-        		    System.out.println("4 - Alterar Produto");
-        		    System.out.println("5 - Excluir Produto");
-        		    System.out.println("0 - Voltar");
-        		    System.out.print("Escolha uma opção: ");
-        		    
-        		    opcaoProduto = teclado.nextInt();
-        		    
-        		    switch (opcaoProduto) {
-        		    case 1:
-        		    	teclado.nextLine();
+            System.out.println("\n===== MENU =====");
+            System.out.println("1 - Produtos");
+            System.out.println("2 - Clientes");
+            System.out.println("3 - Pedidos");
+            System.out.println("0 - Sair");
+            System.out.print("Escolha uma opção: ");
 
-        		    	System.out.print("Descrição: ");
-        		    	String descricao = teclado.nextLine();
+            opcao = teclado.nextInt();
 
-        		    	System.out.print("Preço: ");
-        		    	double preco = teclado.nextDouble();
+            switch (opcao) {
 
-        		    	Produto produto = new Produto(descricao, preco);
+            case 1:
 
-        		    	dao.salvar(produto);
+                System.out.println("\n===== PRODUTOS =====");
+                System.out.println("1 - Cadastrar Produto");
+                System.out.println("2 - Listar Produtos");
+                System.out.println("3 - Consultar Produto");
+                System.out.println("4 - Alterar Produto");
+                System.out.println("5 - Excluir Produto");
+                System.out.println("0 - Voltar");
+                System.out.print("Escolha uma opção: ");
 
-        		    	System.out.println("Produto cadastrado com sucesso!");
-        		        break;
+                opcaoProduto = teclado.nextInt();
 
-        		    case 2:
-        		       List<Produto> produtos = dao.consultar();
-        		       
-        		       for (Produto p : produtos) {
-        		    	   System.out.println("----------------");
-        		           System.out.println("ID: " + p.getId());
-        		           System.out.println("Descrição: " + p.getDescricao());
-        		           System.out.println("Preço: " + p.getPreco());
-        		       }
-        		        break;
+                switch (opcaoProduto) {
 
-        		    case 3:
 
-        		        System.out.print("Digite o ID do produto: ");
-        		        int id = teclado.nextInt();
+                case 1:
 
-        		        Produto produtoConsultado = dao.consultar(id);
+                    teclado.nextLine();
 
-        		        if (produtoConsultado != null) {
+                    System.out.print("Descrição: ");
+                    String descricao = teclado.nextLine();
 
-        		            System.out.println("----------------");
-        		            System.out.println("ID: " + produtoConsultado.getId());
-        		            System.out.println("Descrição: " + produtoConsultado.getDescricao());
-        		            System.out.println("Preço: " + produtoConsultado.getPreco());
+                    System.out.print("Preço: ");
+                    double preco = teclado.nextDouble();
 
-        		        } else {
-        		            System.out.println("Produto não encontrado!");
-        		        }
-        		        break;
+                    System.out.print("Estoque: ");
+                    int estoque = teclado.nextInt();
 
-        		    case 4:
-        		    	  System.out.print("Digite o ID do produto: ");
-        		    	    int idAlterar = teclado.nextInt();
 
-        		    	    Produto produtoAlterar = dao.consultar(idAlterar);
+                    Produto produto = new Produto(descricao, preco, estoque);
 
-        		    	    if (produtoAlterar != null) {
+                    dao.salvar(produto);
 
-        		    	        teclado.nextLine();
+                    System.out.println("Produto cadastrado com sucesso!");
 
-        		    	        System.out.print("Nova descrição: ");
-        		    	        String descricaoNova = teclado.nextLine();
+                    break;
 
-        		    	        System.out.print("Novo preço: ");
-        		    	        double precoNovo = teclado.nextDouble();
 
-        		    	        produtoAlterar.setDescricao(descricaoNova);
-        		    	        produtoAlterar.setPreco(precoNovo);
+                case 2:
 
-        		    	        dao.alterar(produtoAlterar);
+                    List<Produto> produtos = dao.consultar();
 
-        		    	        System.out.println("Produto alterado com sucesso!");
+                    for (Produto p : produtos) {
 
-        		    	    } else {
-        		    	        System.out.println("Produto não encontrado!");
-        		    	    }
+                        System.out.println("----------------");
+                        System.out.println("ID: " + p.getId());
+                        System.out.println("Descrição: " + p.getDescricao());
+                        System.out.println("Preço: " + p.getPreco());
+                        System.out.println("Estoque: " + p.getEstoque());
 
-        		        break;
+                    }
 
-        		    case 5:
-        		    	 System.out.print("Digite o ID do produto: ");
-        		    	    int idExcluir = teclado.nextInt();
+                    break;
 
-        		    	    Produto produtoExcluir = dao.consultar(idExcluir);
 
-        		    	    if (produtoExcluir != null) {
+                case 3:
 
-        		    	        dao.deletar(idExcluir);
+                    System.out.print("Digite o ID do produto: ");
+                    int id = teclado.nextInt();
 
-        		    	        System.out.println("Produto excluído com sucesso!");
+                    Produto produtoConsultado = dao.consultar(id);
 
-        		    	    } else {
 
-        		    	        System.out.println("Produto não encontrado!");
+                    if (produtoConsultado != null) {
 
-        		    	    }
-        		        break;
+                        System.out.println("----------------");
+                        System.out.println("ID: " + produtoConsultado.getId());
+                        System.out.println("Descrição: " + produtoConsultado.getDescricao());
+                        System.out.println("Preço: " + produtoConsultado.getPreco());
+                        System.out.println("Estoque: " + produtoConsultado.getEstoque());
 
-        		    case 0:
-        		        System.out.println("Voltando...");
-        		        break;
+                    } else {
 
-        		    default:
-        		        System.out.println("Opção inválida!");
-        		    	
-        		    }
-        	    break;
-        	    
+                        System.out.println("Produto não encontrado!");
 
-        	case 2:
-        	    System.out.println("Menu de Clientes");
-        	    break;
+                    }
 
-        	case 3:
-        	    System.out.println("Menu de Pedidos");
-        	    break;
+                    break;
 
-        	case 0:
-        	    System.out.println("Encerrando o sistema...");
-        	    break;
 
-        	default:
-        	    System.out.println("Opção inválida!");
-        	}
-        		
-        }while(opcao !=0);
-        	
-        
+                case 4:
+
+                    System.out.print("Digite o ID do produto: ");
+                    int idAlterar = teclado.nextInt();
+
+                    Produto produtoAlterar = dao.consultar(idAlterar);
+
+
+                    if (produtoAlterar != null) {
+
+                        teclado.nextLine();
+
+                        System.out.print("Nova descrição: ");
+                        String descricaoNova = teclado.nextLine();
+
+                        System.out.print("Novo preço: ");
+                        double precoNovo = teclado.nextDouble();
+
+                        System.out.print("Novo estoque: ");
+                        int estoqueNovo = teclado.nextInt();
+
+
+                        produtoAlterar.setDescricao(descricaoNova);
+                        produtoAlterar.setPreco(precoNovo);
+                        produtoAlterar.setEstoque(estoqueNovo);
+
+
+                        dao.alterar(produtoAlterar);
+
+                        System.out.println("Produto alterado com sucesso!");
+
+                    } else {
+
+                        System.out.println("Produto não encontrado!");
+
+                    }
+
+                    break;
+
+
+                case 5:
+
+                    System.out.print("Digite o ID do produto: ");
+                    int idExcluir = teclado.nextInt();
+
+
+                    Produto produtoExcluir = dao.consultar(idExcluir);
+
+
+                    if (produtoExcluir != null) {
+
+                        dao.deletar(idExcluir);
+
+                        System.out.println("Produto excluído com sucesso!");
+
+                    } else {
+
+                        System.out.println("Produto não encontrado!");
+
+                    }
+
+                    break;
+
+
+                case 0:
+
+                    System.out.println("Voltando...");
+
+                    break;
+
+
+                default:
+
+                    System.out.println("Opção inválida!");
+
+                }
+
+                break;
+
+
+
+            case 2:
+
+                System.out.println("Menu de Clientes");
+
+                break;
+
+
+
+            case 3:
+
+                System.out.println("Menu de Pedidos");
+
+                break;
+
+
+
+            case 0:
+
+                System.out.println("Encerrando o sistema...");
+
+                break;
+
+
+
+            default:
+
+                System.out.println("Opção inválida!");
+
+            }
+
+
+        } while (opcao != 0);
+
+
+        teclado.close();
 
     }
 
 }
-		
-	
-		
-	
-
-
-
-
-//CÓDIGOS ANTIGOS//
-
-/*dao.deletar(3);
-Produto p = dao.consultar(3);
-if(p != null) {
-	System.out.println(p.getId() + " " + p.getDescricao() + " " + p.getPreco());
-}else {
-	System.out.println("Produto não encontrado");*/
-
-
-
-/*Produto retorno = dao.salvar(p1);
-System.out.println(retorno.getId() + " " + retorno.getDescricao());*/
-/*List<Produto> lista = dao.consultar();
-for (Produto p : lista ) {
-	System.out.println(p.getId() + " " + p.getDescricao() + " " + p.getPreco());	
-}*/
-
-/*Produto p = dao.consultar(4);
-System.out.println(p.getId() + " " + p.getDescricao() + " " + p.getPreco());
-
-p.setDescricao("Alcatra");
-p.setPreco(39.99);
-dao.alterar(p);
-
-Produto alterado = dao.consultar(4);
-System.out.println(alterado.getId() + " " + alterado.getDescricao() + " " + alterado.getPreco());*/
