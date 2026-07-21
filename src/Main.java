@@ -2,8 +2,10 @@ import java.util.List;
 import java.util.Scanner;
 
 import dao.ClienteDao;
+import dao.PedidoDao;
 import dao.ProdutoDao;
 import modelos.Cliente;
+import modelos.Pedido;
 import modelos.Produto;
 
 
@@ -15,6 +17,8 @@ public class Main {
 
 		ProdutoDao produtoDao = new ProdutoDao();
 		ClienteDao clienteDao = new ClienteDao();
+		PedidoDao pedidoDao = new PedidoDao();
+
 
 		Scanner teclado = new Scanner(System.in);
 
@@ -31,6 +35,7 @@ public class Main {
 			System.out.println("2 - Clientes");
 			System.out.println("3 - Pedidos");
 			System.out.println("0 - Sair");
+
 			System.out.print("Escolha uma opção: ");
 
 			opcao = teclado.nextInt();
@@ -38,6 +43,7 @@ public class Main {
 
 
 			switch(opcao) {
+
 
 
 			case 1:
@@ -48,96 +54,95 @@ public class Main {
 
 
 
+
+
 			case 2:
 
+				System.out.println("Menu de Clientes");
 
-				int opcaoCliente;
+				break;
 
 
-				System.out.println("\n===== CLIENTES =====");
-				System.out.println("1 - Cadastrar Cliente");
-				System.out.println("2 - Listar Clientes");
-				System.out.println("3 - Consultar Cliente");
-				System.out.println("4 - Alterar Cliente");
-				System.out.println("5 - Excluir Cliente");
+
+
+
+			case 3:
+
+
+				int opcaoPedido;
+
+
+
+				System.out.println("\n===== PEDIDOS =====");
+				System.out.println("1 - Criar Pedido");
+				System.out.println("2 - Listar Pedidos");
+				System.out.println("3 - Finalizar Pedido");
 				System.out.println("0 - Voltar");
 
 				System.out.print("Escolha uma opção: ");
 
-				opcaoCliente = teclado.nextInt();
+				opcaoPedido = teclado.nextInt();
 
 
 
-				switch(opcaoCliente) {
+
+
+				switch(opcaoPedido) {
 
 
 
 				case 1:
 
 
-					teclado.nextLine();
+					System.out.print("Digite o ID do cliente: ");
 
-
-					System.out.print("CPF: ");
-					String cpf = teclado.nextLine();
-
-
-					System.out.print("Nome: ");
-					String nome = teclado.nextLine();
-
-
-					System.out.print("Email: ");
-					String email = teclado.nextLine();
-
-
-					System.out.print("Rua: ");
-					String rua = teclado.nextLine();
-
-
-					System.out.print("Número: ");
-					int numero = teclado.nextInt();
-
-
-					teclado.nextLine();
-
-
-					System.out.print("Bairro: ");
-					String bairro = teclado.nextLine();
-
-
-					System.out.print("CEP: ");
-					String cep = teclado.nextLine();
-
-
-					System.out.print("Cidade: ");
-					String cidade = teclado.nextLine();
-
-
-					System.out.print("Estado: ");
-					String estado = teclado.nextLine();
+					int idCliente = teclado.nextInt();
 
 
 
-					Cliente cliente = new Cliente(
-							cpf,
-							nome,
-							email,
-							rua,
-							numero,
-							bairro,
-							cep,
-							cidade,
-							estado
-							);
+					Cliente cliente = clienteDao.consultar(idCliente);
 
 
 
-					clienteDao.salvar(cliente);
+					if(cliente != null) {
 
 
-					System.out.println("Cliente cadastrado com sucesso!");
+						teclado.nextLine();
+
+
+						System.out.print("Data do pedido: ");
+
+						String data = teclado.nextLine();
+
+
+
+						Pedido pedido = new Pedido(
+								cliente,
+								data,
+								"Em aberto"
+								);
+
+
+
+						pedidoDao.salvar(pedido);
+
+
+
+						System.out.println("Pedido criado com sucesso!");
+
+
+
+					}else {
+
+
+						System.out.println("Cliente não encontrado!");
+
+					}
+
+
 
 					break;
+
 
 
 
@@ -145,20 +150,22 @@ public class Main {
 				case 2:
 
 
-					List<Cliente> clientes = clienteDao.consultar();
+					List<Pedido> pedidos = pedidoDao.consultar();
 
 
-					for(Cliente c : clientes) {
+
+					for(Pedido p : pedidos) {
 
 
 						System.out.println("----------------");
-						System.out.println("ID: " + c.getId());
-						System.out.println("Nome: " + c.getNome());
-						System.out.println("CPF: " + c.getCpf());
-						System.out.println("Email: " + c.getEmail());
 
+						System.out.println("ID: " + p.getId());
+						System.out.println("Cliente: " + p.getCliente().getId());
+						System.out.println("Data: " + p.getData());
+						System.out.println("Status: " + p.getStatus());
 
 					}
+
 
 
 					break;
@@ -170,88 +177,30 @@ public class Main {
 				case 3:
 
 
-					System.out.print("Digite o ID do cliente: ");
+					System.out.print("Digite o ID do pedido: ");
 
-					int id = teclado.nextInt();
-
-
-					Cliente clienteConsultado = clienteDao.consultar(id);
+					int idPedido = teclado.nextInt();
 
 
 
-					if(clienteConsultado != null) {
-
-
-						System.out.println("----------------");
-						System.out.println("ID: " + clienteConsultado.getId());
-						System.out.println("Nome: " + clienteConsultado.getNome());
-						System.out.println("CPF: " + clienteConsultado.getCpf());
-						System.out.println("Email: " + clienteConsultado.getEmail());
+					Pedido pedidoFinalizar = pedidoDao.consultar(idPedido);
 
 
 
-					}else {
+					if(pedidoFinalizar != null) {
 
 
-						System.out.println("Cliente não encontrado!");
-
-					}
+						pedidoDao.finalizarPedido(pedidoFinalizar);
 
 
-					break;
-
-
-
-
-
-				case 4:
-
-
-					System.out.print("Digite o ID do cliente: ");
-
-					int idAlterar = teclado.nextInt();
-
-
-
-					Cliente clienteAlterar = clienteDao.consultar(idAlterar);
-
-
-
-					if(clienteAlterar != null) {
-
-
-						teclado.nextLine();
-
-
-						System.out.print("Novo nome: ");
-
-						String novoNome = teclado.nextLine();
-
-
-						System.out.print("Novo email: ");
-
-						String novoEmail = teclado.nextLine();
-
-
-
-						clienteAlterar.setNome(novoNome);
-
-						clienteAlterar.setEmail(novoEmail);
-
-
-
-						clienteDao.alterar(clienteAlterar);
-
-
-
-						System.out.println("Cliente alterado com sucesso!");
+						System.out.println("Pedido finalizado com sucesso!");
 
 
 
 					}else {
 
 
-						System.out.println("Cliente não encontrado!");
+						System.out.println("Pedido não encontrado!");
 
 					}
 
@@ -259,42 +208,6 @@ public class Main {
 
 					break;
 
-
-
-
-
-
-				case 5:
-
-
-					System.out.print("Digite o ID do cliente: ");
-
-					int idExcluir = teclado.nextInt();
-
-
-
-					Cliente clienteExcluir = clienteDao.consultar(idExcluir);
-
-
-
-					if(clienteExcluir != null) {
-
-
-						clienteDao.deletar(idExcluir);
-
-
-						System.out.println("Cliente excluído com sucesso!");
-
-
-					}else {
-
-
-						System.out.println("Cliente não encontrado!");
-
-					}
-
-
-					break;
 
 
 
@@ -307,6 +220,7 @@ public class Main {
 
 
 
+
 				default:
 
 					System.out.println("Opção inválida!");
@@ -314,17 +228,9 @@ public class Main {
 				}
 
 
-				break;
-
-
-
-
-
-			case 3:
-
-				System.out.println("Menu de Pedidos");
 
 				break;
+
 
 
 
@@ -334,6 +240,7 @@ public class Main {
 				System.out.println("Encerrando sistema...");
 
 				break;
+
 
 
 

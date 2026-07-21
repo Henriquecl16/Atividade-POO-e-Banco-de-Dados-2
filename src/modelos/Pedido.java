@@ -12,6 +12,7 @@ public class Pedido {
 	private List<Produto> produtos;
 
 
+
 	public Pedido() {
 
 		produtos = new ArrayList<Produto>();
@@ -51,46 +52,100 @@ public class Pedido {
 
 
 
-	public int getId() {
-		return id;
+	public void removerDoCarrinho(Produto produto) {
+
+		produtos.remove(produto);
+
 	}
 
 
+
+	public double calcularTotal() {
+
+		double total = 0;
+
+
+		for(Produto produto : produtos) {
+
+			total += produto.getPreco();
+
+		}
+
+
+		return total;
+
+	}
+
+
+
+	public void finalizarPedido() {
+
+		status = "Finalizado";
+
+	}
+
+
+
+	public int getId() {
+
+		return id;
+
+	}
+
+
+
 	public void setId(int id) {
+
 		this.id = id;
+
 	}
 
 
 
 	public Cliente getCliente() {
+
 		return cliente;
+
 	}
 
 
+
 	public void setCliente(Cliente cliente) {
+
 		this.cliente = cliente;
+
 	}
 
 
 
 	public String getData() {
+
 		return data;
+
 	}
 
 
+
 	public void setData(String data) {
+
 		this.data = data;
+
 	}
 
 
 
 	public String getStatus() {
+
 		return status;
+
 	}
 
 
+
 	public void setStatus(String status) {
+
 		this.status = status;
+
 	}
 
 
@@ -108,6 +163,5 @@ public class Pedido {
 		this.produtos = produtos;
 
 	}
-
 
 }
